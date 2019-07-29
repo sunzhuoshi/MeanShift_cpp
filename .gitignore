@@ -3,3 +3,4 @@ build/
 *~
 /MeanShift
 /result.csv
+.DS_Store

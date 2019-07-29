@@ -2,17 +2,25 @@
 #include <math.h>
 #include "MeanShift.h"
 
+#if USE_ISPC
+#include "ispc/core_ispc.h"
+#endif
+
 using namespace std;
 
 #define EPSILON 0.00000001
 #define CLUSTER_EPSILON 0.5
 
 double euclidean_distance(const vector<double> &point_a, const vector<double> &point_b){
+#if USE_ISPC
+    return ispc::euclidean_distance(&point_a[0], &point_b[0], point_a.size());
+#else
     double total = 0;
     for(int i=0; i<point_a.size(); i++){
         total += (point_a[i] - point_b[i]) * (point_a[i] - point_b[i]);
     }
     return sqrt(total);
+#endif 
 }
 
 double gaussian_kernel(double distance, double kernel_bandwidth){

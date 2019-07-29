@@ -1,8 +1,18 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <sys/times.h>
+#include <unistd.h>
+#include <iostream>
 #include "MeanShift.h"
 
 using namespace std;
+
+static double cputime(void)
+{
+    struct tms t;
+    times(&t);
+    return (double)(t.tms_utime + t.tms_stime)/  sysconf(_SC_CLK_TCK) ;
+}
 
 vector<vector<double> > load_points(const char *filename) {
     vector<vector<double> > points;
@@ -45,7 +55,13 @@ int main(int argc, char **argv)
     double kernel_bandwidth = 3;
 
     vector<vector<double> > points = load_points("test.csv");
+
+    printf("\n Action starts\n");
+    printf("\n ...\n");
+    double start = cputime();
     vector<Cluster> clusters = msp->cluster(points, kernel_bandwidth);
+    double end = cputime();
+    printf("\n Action ends, time: %fs\n", end - start);
 
     FILE *fp = fopen("result.csv", "w");
     if(!fp){
@@ -56,6 +72,10 @@ int main(int argc, char **argv)
     printf("\n====================\n");
     printf("Found %lu clusters\n", clusters.size());
     printf("====================\n\n");
+
+    printf("Press any key to continue\n");
+    system("read");
+
     for(int cluster = 0; cluster < clusters.size(); cluster++) {
       printf("Cluster %i:\n", cluster);
       for(int point = 0; point < clusters[cluster].original_points.size(); point++){
