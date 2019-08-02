@@ -41,8 +41,8 @@ static double cputime(void)
 #endif 
 }
 
-vector<vector<double> > load_points(const char *filename) {
-    vector<vector<double> > points;
+vector<Point2> load_points(const char *filename) {
+    vector<Point2> points;
     FILE *fp = fopen(filename, "r");
     char line[50];
     while (fgets(line, sizeof(line), fp) != NULL) {
@@ -54,9 +54,9 @@ vector<vector<double> > load_points(const char *filename) {
                 *y_str++ = 0;
                 x = atof(x_str);
                 y = atof(y_str);
-                vector<double> point;
-                point.push_back(x);
-                point.push_back(y);
+                Point2 point;
+                point.x = x;
+                point.y = y;
                 points.push_back(point);
                 break;
             }
@@ -67,12 +67,9 @@ vector<vector<double> > load_points(const char *filename) {
     return points;
 }
 
-void print_points(vector<vector<double> > points){
+void print_points(vector<Point2> points){
     for(size_t i=0; i<points.size(); i++){
-        for(size_t dim = 0; dim<points[i].size(); dim++) {
-            printf("%f ", points[i][dim]);
-        }
-        printf("\n");
+		printf("%f %f\n", points[i].x, points[i].y);
     }
 }
 
@@ -82,7 +79,7 @@ int main(int argc, char **argv)
     MeanShift *msp = new MeanShift();
     double kernel_bandwidth = 3;
 
-    vector<vector<double> > points = load_points("test.csv");
+    vector<Point2> points = load_points("test.csv");
 
     printf("\n Action starts\n");
     printf("\n ...\n");
@@ -106,15 +103,11 @@ int main(int argc, char **argv)
 
     for(size_t cluster = 0; cluster < clusters.size(); cluster++) {
       printf("Cluster %i:\n", cluster);
-      for(size_t point = 0; point < clusters[cluster].original_points.size(); point++){
-        for(size_t dim = 0; dim < clusters[cluster].original_points[point].size(); dim++) {
-          printf("%f ", clusters[cluster].original_points[point][dim]);
-          fprintf(fp, dim?",%f":"%f", clusters[cluster].original_points[point][dim]);
-        }
+      for(size_t point = 0; point < clusters[cluster].original_points.size(); point++) {
+		  printf("%f %f", clusters[cluster].original_points[point].x, clusters[cluster].original_points[point].y);
+          fprintf(fp, "%f,%f", clusters[cluster].original_points[point].x, clusters[cluster].original_points[point].y);
         printf(" -> ");
-        for(size_t dim = 0; dim < clusters[cluster].shifted_points[point].size(); dim++) {
-          printf("%f ", clusters[cluster].shifted_points[point][dim]);
-        }
+		printf("%f %f", clusters[cluster].shifted_points[point].x, clusters[cluster].shifted_points[point].y);
         printf("\n");
         fprintf(fp, "\n");
       }
