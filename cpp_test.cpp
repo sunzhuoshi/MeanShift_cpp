@@ -20,7 +20,7 @@ void init() {
 #ifdef _MSC_VER
 	LARGE_INTEGER li;
 	if (QueryPerformanceFrequency(&li)) {
-		Freq = double(li.QuadPart) / 1000.0;
+		Freq = double(li.QuadPart);
 
 		QueryPerformanceCounter(&li);
 		CounterStart = li.QuadPart;
@@ -98,6 +98,7 @@ int main(int argc, char **argv)
     printf("Found %lu clusters\n", clusters.size());
     printf("====================\n\n");
 
+	/*
     printf("Press any key to continue\n");
     system("read");
 
@@ -113,6 +114,7 @@ int main(int argc, char **argv)
       }
       printf("\n");
     }
+	*/
     fclose(fp);
 
     return 0;
