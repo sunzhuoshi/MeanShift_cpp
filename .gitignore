@@ -18,3 +18,5 @@ build/
 *.idb
 *.user
 *.user
+*.iobj
+*.ipdb
