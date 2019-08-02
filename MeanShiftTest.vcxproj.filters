@@ -13,6 +13,9 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="ispc">
+      <UniqueIdentifier>{8d698870-5f40-43a5-b99a-1d1a83092a65}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -29,5 +32,21 @@
     <ClInclude Include="MeanShift.h">
       <Filter>Source Files</Filter>
     </ClInclude>
+    <ClInclude Include="ispc\core_ispc.h">
+      <Filter>ispc</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ispc\core.ispc">
+      <Filter>ispc</Filter>
+    </None>
+    <None Include="ispc\Makefile">
+      <Filter>ispc</Filter>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Object Include="ispc\core_ispc.o">
+      <Filter>ispc</Filter>
+    </Object>
   </ItemGroup>
 </Project>
