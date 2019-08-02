@@ -31,17 +31,26 @@ void MeanShift::set_kernel( double (*_kernel_func)(double,double) ) {
     }
 }
 
-Point2 MeanShift::shift_point(const Point2 &point, const vector<Point2> &points, double kernel_bandwidth) {
-    Point2 shifted_point;
-    double total_weight = 0;
-    for(size_t i=0; i<points.size(); i++){
-        const Point2 &temp_point = points[i];
-        double distance = euclidean_distance(point, temp_point);
-        double weight = kernel_func(distance, kernel_bandwidth);
+double perform(const Point2 &point, const Point2 * points, size_t point_count, double kernel_bandwidth, Point2 &shifted_point) {
+#if USE_ISPC
+	double total_weight = ispc::perform((const ispc::Point2 &)point, (const ispc::Point2 *)points, point_count, kernel_bandwidth, (ispc::Point2&)shifted_point);
+#else
+	double total_weight = 0.;
+	for (size_t i = 0; i < point_count; i++) {
+		const Point2 &temp_point = points[i];
+		double distance = euclidean_distance(point, temp_point);
+		double weight = gaussian_kernel(distance, kernel_bandwidth);
 		shifted_point.x += temp_point.x * weight;
 		shifted_point.y += temp_point.y * weight;
-        total_weight += weight;
-    }
+		total_weight += weight;
+	}
+#endif
+	return total_weight;
+}
+
+Point2 MeanShift::shift_point(const Point2 &point, const vector<Point2> &points, double kernel_bandwidth) {
+    Point2 shifted_point;
+	double total_weight = perform(point, &points[0], points.size(), kernel_bandwidth, shifted_point);
 
 	shifted_point.x /= total_weight;
 	shifted_point.y /= total_weight;
