@@ -20,3 +20,4 @@ build/
 *.user
 *.iobj
 *.ipdb
+ispc/core_ispc.h
