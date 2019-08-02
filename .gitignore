@@ -16,3 +16,5 @@ build/
 *.obj
 *.ilk
 *.idb
+*.user
+*.user
