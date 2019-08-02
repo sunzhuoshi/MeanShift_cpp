@@ -16,7 +16,7 @@ double euclidean_distance(const vector<double> &point_a, const vector<double> &p
     return ispc::euclidean_distance(&point_a[0], &point_b[0], point_a.size());
 #else
     double total = 0;
-    for(int i=0; i<point_a.size(); i++){
+    for(size_t i=0; i<point_a.size(); i++){
         total += (point_a[i] - point_b[i]) * (point_a[i] - point_b[i]);
     }
     return sqrt(total);
@@ -38,21 +38,21 @@ void MeanShift::set_kernel( double (*_kernel_func)(double,double) ) {
 
 vector<double> MeanShift::shift_point(const vector<double> &point, const vector<vector<double> > &points, double kernel_bandwidth) {
     vector<double> shifted_point = point;
-    for(int dim = 0; dim<shifted_point.size(); dim++){
+    for(size_t dim = 0; dim<shifted_point.size(); dim++){
         shifted_point[dim] = 0;
     }
     double total_weight = 0;
-    for(int i=0; i<points.size(); i++){
+    for(size_t i=0; i<points.size(); i++){
         vector<double> temp_point = points[i];
         double distance = euclidean_distance(point, temp_point);
         double weight = kernel_func(distance, kernel_bandwidth);
-        for(int j=0; j<shifted_point.size(); j++){
+        for(size_t j=0; j<shifted_point.size(); j++){
             shifted_point[j] += temp_point[j] * weight;
         }
         total_weight += weight;
     }
 
-    for(int i=0; i<shifted_point.size(); i++){
+    for(size_t i=0; i<shifted_point.size(); i++){
         shifted_point[i] /= total_weight;
     }
     return shifted_point;
@@ -64,7 +64,7 @@ vector<vector<double> > MeanShift::meanshift(const vector<vector<double> > & poi
     double max_shift_distance;
     do {
         max_shift_distance = 0;
-        for(int i=0; i<shifted_points.size(); i++){
+        for(size_t i=0; i<shifted_points.size(); i++){
             if (!stop_moving[i]) {
                 vector<double>point_new = shift_point(shifted_points[i], points, kernel_bandwidth);
                 double shift_distance = euclidean_distance(point_new, shifted_points[i]);
@@ -89,10 +89,9 @@ vector<Cluster> MeanShift::cluster(
 {
     vector<Cluster> clusters;
 
-    for (int i = 0; i < shifted_points.size(); i++) {
-
-        int c = 0;
-        for (; c < clusters.size(); c++) {
+    for (size_t i = 0; i < shifted_points.size(); i++) {
+		size_t c;
+        for (c=0; c < clusters.size(); c++) {
             if (euclidean_distance(shifted_points[i], clusters[c].mode) <= CLUSTER_EPSILON) {
                 break;
             }
