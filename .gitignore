@@ -4,3 +4,15 @@ build/
 /MeanShift
 /result.csv
 .DS_Store
+.suo
+*.db
+*.opendb
+*.ipch
+*.log
+*.exe
+*.pdb
+*.tlog
+*.lastbuildstate
+*.obj
+*.ilk
+*.idb
