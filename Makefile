@@ -15,7 +15,7 @@ CXXFLAGS += -DUSE_ISPC=$(USE_ISPC)
 
 all: MeanShift
 
-ispc/core_ispc.o: ispc
+ispc/core_ispc.o:
 	make -C ispc all
 
 test: all
@@ -23,7 +23,8 @@ test: all
 
 clean:
 	rm -rf MeanShift
+	rm -rf *.o
 	make -C ispc clean
 
-MeanShift: cpp_test.o MeanShift.o $(ISPC_OBJS)
-	g++ -o $@ $(CXXFLAGS) $+
+MeanShift: $(ISPC_OBJS) cpp_test.o MeanShift.o 
+	$(CXX) -o $@ $(CXXFLAGS) $+
